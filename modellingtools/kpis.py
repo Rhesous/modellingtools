@@ -19,7 +19,7 @@ def Gini(y_true, y_pred):
 
     # get Lorenz curves
     L_true = np.cumsum(true_order) / np.sum(true_order)
-    L_pred = np.cxumsum(pred_order) / np.sum(pred_order)
+    L_pred = np.cumsum(pred_order) / np.sum(pred_order)
     L_ones = np.linspace(1 / n_samples, 1, n_samples)
 
     # get Gini coefficients (area between curves)
