@@ -1,7 +1,32 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
-def plot_emblem(data, var_targ, ytarg, pred):
+def plot_factor_imp(regobj, nb_class, var_names = None):
+    # if reglin
+    if "linear_model" in regobj.__module__:
+        df_coefs_ = pd.DataFrame({'coeff':regobj.coef_},index= var_names)
+        df_coefs_ = df_coefs_.reindex(df_coefs_.coeff.abs().sort_values(inplace=False,ascending=True).index)
+        xlab_ = 'Coefficient value'
+        title_ = '{} biggest coefficients for linear regression'.format(nb_class)
+    # if gbm
+    elif "gradient_boosting" in regobj.__module__:
+        df_coefs_ = pd.DataFrame({'coeff':regobj.feature_importances_ *100},index= var_names)
+        df_coefs_ = df_coefs_.reindex(df_coefs_.coeff.abs().sort_values(inplace=False,ascending=True).index)
+        xlab_ = 'Relative Importance'
+        title_ = 'Variable Importance - {} most important variables'.format(nb_class)
+
+    nb_class = min(nb_class, df_coefs_.shape[0])
+    pos = np.arange(nb_class) + .5
+    plt.subplot(1, 1, 1)
+    col =  df_coefs_.coeff.apply(lambda x: "steelblue" if x >0 else "firebrick")
+    plt.barh(pos,  df_coefs_[-nb_class:]['coeff'], align='center',color=col[-nb_class:])
+    plt.yticks(pos, df_coefs_.index.tolist()[-nb_class:])
+    plt.xlabel(xlab_)
+    plt.title(title_);
+
+
+def plot_means_match(data, var_targ, ytarg, pred):
     df = data.copy()
     df['pred'] = pred
     df['target'] = ytarg

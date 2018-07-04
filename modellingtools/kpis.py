@@ -1,12 +1,7 @@
 import numpy as np
 
 def Gini(y_true, y_pred):
-    """
-    by https://www.kaggle.com/jpopham91
-    :param y_true:
-    :param y_pred:
-    :return:
-    """
+
     # check and get number of samples
     assert y_true.shape == y_pred.shape
     n_samples = y_true.shape[0]
