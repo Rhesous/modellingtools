@@ -1,7 +1,20 @@
 import numpy as np
 
 def Gini(y_true, y_pred):
+    """
+    Calculate the normalized gini index without weights. It is a float between -1 and 1.
+    The higher the value is, the closer the model, only taking into account the ordering of the values.
+    A negative Gini means most of the time that the model inverts high values and low values.
+        ordering of the target value.
+    From kaggle : https://www.kaggle.com/jpopham91/gini-scoring-simple-and-efficient
+    Args:
+        y_true: true value of target variable
+        y_pred: predicted values to compare
 
+    Returns:
+        The gini index as a float value.
+
+    """
     # check and get number of samples
     assert y_true.shape == y_pred.shape
     n_samples = y_true.shape[0]

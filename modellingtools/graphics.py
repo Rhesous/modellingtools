@@ -3,6 +3,19 @@ import pandas as pd
 import numpy as np
 
 def plot_factor_imp(regobj, nb_class, var_names = None):
+    """
+    Plot factor importance for regression and GBM.
+    For the moment this function is only implemented for GBM and linear model from SKlearn, and output the n_class most
+    important variables. For regression it is the value of the coefficient that is taken into account, and for GBM the
+    relative influence.
+    Args:
+        regobj: The regression object, either a GBM or linear model already fitted.
+        nb_class: Number of variables to consider.
+        var_names: Vector containing the names of the variables.
+
+    Returns: plot the graphic.
+
+    """
     # if reglin
     if "linear_model" in regobj.__module__:
         df_coefs_ = pd.DataFrame({'coeff':regobj.coef_},index= var_names)
@@ -27,6 +40,18 @@ def plot_factor_imp(regobj, nb_class, var_names = None):
 
 
 def plot_means_match(data, var_targ, ytarg, pred):
+    """
+    Plot the means of actual and fitted value, for each class defined as value of the var target. If the var target
+    as more than 20 variables, it will be cutted into bins.
+    Args:
+        data: database
+        var_targ: variable to use for splitting the database
+        ytarg: target variable, actual values
+        pred: fitted values
+
+    Returns: plot the graphic.
+
+    """
     df = data.copy()
     df['pred'] = pred
     df['target'] = ytarg
@@ -56,6 +81,16 @@ def plot_means_match(data, var_targ, ytarg, pred):
 
 
 def lift_curve(ytarg, pred):
+    """
+    Plot a lift curve, that divide the values between 20 equal bands of predicted values, and compare in each band
+    the mean of both actual and fitted values.
+    Args:
+        ytarg: target values
+        pred: fitted values
+
+    Returns: plot the graphic
+
+    """
     data = (pd.DataFrame({"actual": ytarg, "model": pred})
             .groupby(pd.cut(pred, np.percentile(a=pred, q=np.arange(0, 100, 5))))
             .agg(['mean', 'count']))
@@ -68,4 +103,3 @@ def lift_curve(ytarg, pred):
     plt.tight_layout()
     fig.autofmt_xdate()
     plt.legend(('Actual', 'Model'))
-    # plt.xlabel(var_targ)
